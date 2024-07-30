@@ -4,12 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import {
-  signIn,
-  signOut,
-  useSession,
-  getProviders,
-  LiteralUnion,
-  ClientSafeProvider,
+  signIn, //for managing the sign in
+  signOut, // for sign out
+  useSession, //for maanging the session
+  getProviders, //for getting the providers
+  LiteralUnion, //for union of string (just for the sake of typescript)
+  ClientSafeProvider, //for the provider (just for the sake of typescript)
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
 
