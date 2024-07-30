@@ -2,7 +2,7 @@ import mongoose, { mongo } from "mongoose";
 
 let isConnected = false;
 const mongoURI = process.env.MONGO_URI as string;
-console.log("MongoDB URI:", mongoURI);
+
 export const connectDB = async () => {
   mongoose.set("strictQuery", true);
 

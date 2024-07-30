@@ -7,11 +7,11 @@ function Home() {
         {/* under score means that the stylings coming from globals.css */}
         Discover & Share
         <br className="max-md:hidden" />
-        <span className="orange_gradient text-center">AI-Powered Prompts</span>
+        <span className="orange_gradient text-center">Blogsie: A Private Space</span>
       </h1>
       <p className="desc text-center">
-        Promptopia is an open-source AI prompting tool for moden world to
-        discover, create and share creative Prompts
+        A Peronalized Blog Site where you can Share your thoughts and ideas and discover
+        new Ideas from others in the community.
       </p>
 
       {/* feed */}

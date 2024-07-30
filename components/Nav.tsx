@@ -14,6 +14,9 @@ import {
 import { BuiltInProviderType } from "next-auth/providers/index";
 
 const Nav = () => {
+  const handleSignOut = async () => {
+    await signOut();
+  };
   const { data: session } = useSession();
 
   const [providers, setProviders] = useState<Record<
@@ -22,6 +25,7 @@ const Nav = () => {
   > | null>(null);
 
   const [toggleDropDown, settoggleDropDown] = useState(false);
+
   useEffect(() => {
     const fetchProvider = async () => {
       const response = await getProviders();
@@ -42,10 +46,10 @@ const Nav = () => {
           alt="Home Logo"
           src="/assets/images/logo.svg"
         />
-        <p className="logo_text">Promptopia</p>
+        <p className="logo_text">Blogsie</p>
       </Link>
 
-      {/* Desktop navigation */}
+      {/* Normal nav */}
 
       <div className="sm:flex hidden">
         {session?.user ? (
@@ -53,18 +57,22 @@ const Nav = () => {
             <Link href="/create-prompt" className="black_btn">
               Create Post
             </Link>
-            <button type="button" onClick={signOut} className="outline_btn">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="outline_btn"
+            >
               Sign Out
             </button>
             <Link href="/profile">
               {" "}
               <Image
                 className="border-1 rounded-full"
-                src={session?.user.image}
+                src={session?.user.image || "/default-profile.png"}
                 width={37}
                 height={37}
                 alt="profile"
-              ></Image>
+              />
             </Link>
           </div>
         ) : (
@@ -84,19 +92,19 @@ const Nav = () => {
         )}
       </div>
 
-      {/* mobile navigation */}
+      {/* mobile nav */}
       <div className="sm:hidden flex relative">
         {session?.user ? (
           <div className="flex">
             <Image
-              src={session?.user.image}
+              src={session?.user.image || "/default-profile.png"}
               width={37}
               height={37}
               alt="profile"
               onClick={() => {
                 settoggleDropDown((prev) => !prev);
               }}
-            ></Image>
+            />
 
             {toggleDropDown && (
               <div className="dropdown">
