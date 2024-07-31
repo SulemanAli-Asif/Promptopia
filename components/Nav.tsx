@@ -54,7 +54,7 @@ const Nav = () => {
       <div className="sm:flex hidden">
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/create-prompt" className="black_btn">
+            <Link href="/create-page" className="black_btn">
               Create Post
             </Link>
             <button
@@ -83,7 +83,7 @@ const Nav = () => {
                   type="button"
                   key={provider.name}
                   onClick={() => signIn(provider.id)}
-                  className="black_btn"
+                  className="black_btn "
                 >
                   Sign in
                 </button>
@@ -117,7 +117,7 @@ const Nav = () => {
                 </Link>
 
                 <Link
-                  href="/create-prompt"
+                  href="/create-page"
                   className="dropdown_link"
                   onClick={() => settoggleDropDown(false)}
                 >
