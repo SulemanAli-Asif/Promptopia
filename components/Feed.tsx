@@ -1,9 +1,125 @@
-import React from 'react'
+"use client";
+import { useCallback, useEffect, useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+
+import PromptCard from "./PromptCard";
+import { set } from "mongoose";
+
+const PromptCardList = ({ data, handleTagClick, handleDelete, handleEdit }: any) => {
+  return (
+    <div className="mt-16 prompt_layout">
+      {data.map((post: any) => (
+        <PromptCard
+          key={post._id}
+          post={post}
+          handleTagClick={handleTagClick}
+          handleDelete = {handleDelete}
+          handleEdit = {handleEdit}
+        />
+      ))}
+    </div>
+  );
+};
+
+
+
 
 const Feed = () => {
-  return (
-    <div>Feed</div>
-  )
-}
+  const [searchText, setSearchText] = useState('');
+  const router = useRouter();
+  const [posts, setPosts] = useState([]);
+  const [filtered, setFiltered] = useState([]);
 
-export default Feed
+  const handleDelete = async (post: any) => {
+    console.log("post ID: ", post._id);
+    const hasConfirmed = confirm("Are you sure you want to delete this post?");
+    console.log(hasConfirmed);
+    if (hasConfirmed) {
+      try {
+        await fetch(`/api/prompt/${post._id.toString()}`, {
+          method: "DELETE",
+        });
+        const newPosts = posts.filter((p: any) => p._id !== post._id);
+        console.log("newPosts: ", newPosts);
+        setPosts(newPosts);
+      } catch (err) {
+        console.log("error: ", err);
+      }
+    }
+  };
+
+  const handleEdit = (post: any) => {
+    router.push(`update-prompt?id=${post._id}`);
+  };
+
+  useEffect(() => {
+    // fetch prompts
+    const fetchPosts = async () => {
+      const response = await fetch("/api/prompt");
+      const data = await response.json();
+
+      setPosts(data);
+    };
+    fetchPosts();
+  }, []);
+
+  // useCallback(()=>{},[])
+
+//  const handleSearchChange = (e: any) =>{
+//   if (!searchText) {
+//     setFiltered(posts); // Reset to all posts if search is cleared
+//     return;
+//  }}
+
+//  useEffect(() => {
+//   if(!searchText) return setPosts(posts); // Reset posts when search text is empty
+//   // Filter posts when search text changes
+//   const filtered = posts.filter((post: any) =>
+//     post?.tag?.toLowerCase().includes(searchText.toLowerCase()) ||
+//     post?.creator?.name?.toLowerCase().includes(searchText.toLowerCase())
+//   );
+
+//   setFiltered(filtered); // Update filtered posts
+// }, [searchText]); // Run effect when searchText or posts change
+
+
+const handleSearchChange = (e: any) => {
+  const searchText = e.target.value;
+  setSearchText(searchText);
+  
+};
+
+const filteredData = useMemo(() => {
+  if (!searchText) {
+    setFiltered(posts); // Reset to all posts if search is cleared
+    return;
+  }
+  const filtered = posts.filter((post: any) =>
+    post?.tag?.toLowerCase().includes(searchText.toLowerCase()) ||
+      post?.creator?.name?.toLowerCase().includes(searchText.toLowerCase())
+    );
+  
+    setFiltered(filtered); // Update filtered posts
+    console.log(filtered)
+}, [searchText, posts]);
+
+ 
+  return (
+    <section className="feed">
+      <form className=" relative w-full flex-center ">
+        <input
+          type="text"
+          placeholder="Search for a tag or a username"
+          value={searchText}
+          onChange={handleSearchChange}
+          required
+          className="search_input peer"
+        />
+      </form>
+
+      <PromptCardList data={filtered} handleDelete={handleDelete} handleEdit = {handleEdit} />
+    </section>
+  );
+};
+
+export default Feed;

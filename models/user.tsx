@@ -16,8 +16,8 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
     minlength: 8,
-    maxlength: 20,
-    match: /^[a-zA-Z0-9]*$/,
+    maxlength: 50, // This should be 50 as per your requirements
+    match: /^[a-zA-Z0-9\s]*$/,
     unique: true,
   },
   image: {

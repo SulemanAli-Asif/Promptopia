@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { title } from "process";
 
-const Form = ({ type, post, setPost, submit, handleSubmit }) => {
+const Form = ({ type, post, setPost, submit, handleSubmit }:{type:string,post:any,setPost:any, submit:any, handleSubmit:any}) => {
   return (
     <section className="w-full max-w-full flex-start flex-col">
       <h1 className="head_text text-left">
@@ -18,11 +18,11 @@ const Form = ({ type, post, setPost, submit, handleSubmit }) => {
       >
         <label>
           <span className="font-satoshi font-semibold text-base text-gray-700">
-            Your Blog Title
+            Enter Prompt
           </span>
           <textarea
             type="text"
-            value={post.title}
+            value={post.prompt}
             onChange={(e) => setPost({ ...post, prompt: e.target.value })}
             placeholder="Enter your blog title"
             required

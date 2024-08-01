@@ -46,7 +46,7 @@ const Nav = () => {
           alt="Home Logo"
           src="/assets/images/logo.svg"
         />
-        <p className="logo_text">Blogsie</p>
+        <p className="logo_text">Promptopia</p>
       </Link>
 
       {/* Normal nav */}
