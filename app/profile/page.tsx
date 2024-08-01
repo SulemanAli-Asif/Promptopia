@@ -16,7 +16,6 @@ const MyProfile = () => {
   };
 
   const handleDelete = async (post: any) => {
-    console.log("post ID: ", post._id);
     const hasConfirmed = confirm("Are you sure you want to delete this post?");
     console.log(hasConfirmed);
     if (hasConfirmed) {
@@ -25,10 +24,8 @@ const MyProfile = () => {
           method: "DELETE",
         });
         const newPosts = posts.filter((p: any) => p._id !== post._id);
-        console.log("newPosts: ", newPosts);
         setPosts(newPosts);
       } catch (err) {
-        console.log("error: ", err);
       }
     }
   };

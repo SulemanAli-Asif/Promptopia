@@ -37,7 +37,7 @@ const PromptCard = ({
               className="rounded-full object-contain"
             />
           )}
-        <Link href = "/user-profile">
+        <Link href = {`/user-profile?id=${post?.creator?._id}`}>
         <div className="flex flex-col">
             <h3 className="font-satoshi font-semibold text-gray-900">
               {post?.creator?.name && post.creator.name}
