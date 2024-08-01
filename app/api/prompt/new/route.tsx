@@ -2,7 +2,7 @@ import { connectDB } from "@utils/database";
 import { NextApiRequest, NextApiResponse } from "next";
 import Prompt from "@models/prompt";
 
-export const POST = async (req:NextApiRequest) =>{
+export const POST = async (req:any,res:any) =>{
 
     const {userId, prompt, tag} = await req.json();
 
