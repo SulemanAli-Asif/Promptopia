@@ -21,7 +21,6 @@ const Form = ({ type, post, setPost, submit, handleSubmit }:{type:string,post:an
             Enter Prompt
           </span>
           <textarea
-            type="text"
             value={post.prompt}
             onChange={(e) => setPost({ ...post, prompt: e.target.value })}
             placeholder="Enter your blog title"
