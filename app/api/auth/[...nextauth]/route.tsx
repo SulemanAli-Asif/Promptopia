@@ -3,6 +3,12 @@ import GoogleProvider from "next-auth/providers/google";
 import { connectDB } from "@utils/database";
 import User from "@models/user";
 
+type CustomProfile = Profile & {
+  email: string;
+  name: string;
+  image: string;
+  picture: string;
+}
 
 const handler = NextAuth({
   providers: [
@@ -14,34 +20,25 @@ const handler = NextAuth({
 
   callbacks: {
     async session({ session }: { session: Session }) {
-      if(session?.user?.email) {
-      const sessionUser = await User.findOne({ email: session.user.email });
-      if(sessionUser)
-        {
+      if (session?.user?.email) {
+        const sessionUser = await User.findOne({ email: session.user.email });
+        if (sessionUser) {
           session.user.id = sessionUser._id.toString();
-        
         }
       }
       return session;
     },
-    async signIn({ profile }: { profile?: Profile }) {
+    async signIn({ profile }:any) {
       try {
-        // Connect to the database
         await connectDB();
         
-        // if the user already exists:
+        const user = await User.findOne({ email: profile?.email });
 
-        const user = await User.findOne({
-          email: profile?.email,
-        });
-        if (!user && profile ) {
-          console.log("profile: ", profile)
-
-          console.log("profile image: ", profile.image)
+        if (!user && profile) {
           await User.create({
             email: profile.email,
             name: profile.name?.replace(" ", "").toLowerCase(),
-            image: profile?.picture,
+            image: profile.picture || profile.image,
           });
         }
 
