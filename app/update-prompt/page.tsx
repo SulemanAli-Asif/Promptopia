@@ -51,10 +51,9 @@ const EditPage = () => {
         router.push("/");
       }
     } catch (err) {
-      console.log("error: ", err);
+      setSubmit(false);
     }
   };
-
 
   return (
     <Form

@@ -8,7 +8,7 @@ import Profile from "@components/Profile";
 const MyProfile = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  const[desc, setDesc] = useState("Welcome to your profile!");
+  const [desc, setDesc] = useState("Welcome to your profile!");
   const [posts, setPosts] = useState([]);
 
   const handleEdit = (post: any) => {
@@ -17,7 +17,6 @@ const MyProfile = () => {
 
   const handleDelete = async (post: any) => {
     const hasConfirmed = confirm("Are you sure you want to delete this post?");
-    console.log(hasConfirmed);
     if (hasConfirmed) {
       try {
         await fetch(`/api/prompt/${post._id.toString()}`, {
@@ -25,23 +24,19 @@ const MyProfile = () => {
         });
         const newPosts = posts.filter((p: any) => p._id !== post._id);
         setPosts(newPosts);
-      } catch (err) {
-      }
+      } catch (err) {}
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     posts.map((post: any) => {
-      if(session?.user.name !== post?.creator?.name){
+      if (session?.user.name !== post?.creator?.name) {
         setDesc(`Welcome to ${session?.user.name}'s profile!`);
-      }
-      else{
-        
+      } else {
         setDesc(`Welcome to your profile, ${session?.user.name}!`);
-  
       }
     });
-  },[])
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {

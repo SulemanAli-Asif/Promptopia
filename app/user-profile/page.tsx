@@ -16,9 +16,9 @@ const MyProfile = () => {
 
   useEffect(() => {
     if (posts.length > 0) {
-      const firstPost:any = posts[0]; // Only check the first post, assuming all posts belong to the same user
+      const firstPost: any = posts[0]; // Only check the first post, assuming all posts belong to the same user
       const isOwnProfile = session?.user.id;
-  
+
       if (isOwnProfile === id) {
         setDesc(`Welcome to your profile, ${session?.user.name}!`);
         setName(session?.user.name || "");
@@ -28,12 +28,6 @@ const MyProfile = () => {
       }
     }
   }, [posts, session?.user.id, id]); // Ensure dependencies are correctly set
-  
-
-  console.log("session?.user.", session?.user.id);
-
-  console.log("posts", posts);
-
 
   useEffect(() => {
     const fetchPosts = async () => {

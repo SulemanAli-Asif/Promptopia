@@ -41,7 +41,7 @@ const Feed = () => {
         const newPosts = posts.filter((p: any) => p._id !== post._id);
         setPosts(newPosts);
       } catch (err) {
-        console.log("error: ", err);
+        return;
       }
     }
   };
