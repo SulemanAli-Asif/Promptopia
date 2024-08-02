@@ -48,7 +48,7 @@ const MyProfile = () => {
     };
 
     fetchPosts();
-  }, [session?.user.id]); // Added session?.user.id to the dependency array
+  }, [session?.user.id]);
   return (
     <Profile
       name={session?.user.name}
