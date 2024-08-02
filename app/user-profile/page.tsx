@@ -16,7 +16,7 @@ const MyProfile = () => {
 
   useEffect(() => {
     if (posts.length > 0) {
-      const firstPost: any = posts[0]; // Only check the first post, assuming all posts belong to the same user
+      const firstPost: any = posts[0];
       const isOwnProfile = session?.user.id;
 
       if (isOwnProfile === id) {
@@ -27,7 +27,7 @@ const MyProfile = () => {
         setName(firstPost?.creator?.name || "");
       }
     }
-  }, [posts, session?.user.id, id]); // Ensure dependencies are correctly set
+  }, [posts, session?.user.id, id]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -37,7 +37,7 @@ const MyProfile = () => {
     };
 
     fetchPosts();
-  }, [session?.user.id]); // Added session?.user.id to the dependency array
+  }, [session?.user.id]);
   return <Profile name={name} desc={desc} data={posts} />;
 };
 

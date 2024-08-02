@@ -61,25 +61,6 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
-  // useCallback(()=>{},[])
-
-  //  const handleSearchChange = (e: any) =>{
-  //   if (!searchText) {
-  //     setFiltered(posts); // Reset to all posts if search is cleared
-  //     return;
-  //  }}
-
-  //  useEffect(() => {
-  //   if(!searchText) return setPosts(posts); // Reset posts when search text is empty
-  //   // Filter posts when search text changes
-  //   const filtered = posts.filter((post: any) =>
-  //     post?.tag?.toLowerCase().includes(searchText.toLowerCase()) ||
-  //     post?.creator?.name?.toLowerCase().includes(searchText.toLowerCase())
-  //   );
-
-  //   setFiltered(filtered); // Update filtered posts
-  // }, [searchText]); // Run effect when searchText or posts change
-
   const handleSearchChange = (e: any) => {
     const searchText = e.target.value;
     setSearchText(searchText);
@@ -87,7 +68,7 @@ const Feed = () => {
 
   const filteredData = useMemo(() => {
     if (!searchText) {
-      setFiltered(posts); // Reset to all posts if search is cleared
+      setFiltered(posts);
       return;
     }
     const filtered = posts.filter(
@@ -96,7 +77,7 @@ const Feed = () => {
         post?.creator?.name?.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    setFiltered(filtered); // Update filtered posts
+    setFiltered(filtered);
   }, [searchText, posts]);
 
   return (

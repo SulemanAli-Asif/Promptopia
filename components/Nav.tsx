@@ -4,12 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import {
-  signIn, //for managing the sign in
-  signOut, // for sign out
-  useSession, //for maanging the session
-  getProviders, //for getting the providers
-  LiteralUnion, //for union of string (just for the sake of typescript)
-  ClientSafeProvider, //for the provider (just for the sake of typescript)
+  signIn,
+  signOut,
+  useSession,
+  getProviders,
+  LiteralUnion,
+  ClientSafeProvider,
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
 
@@ -37,7 +37,6 @@ const Nav = () => {
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
-      {/* mb => margin-bottom, pt=> padding-top */}
       <Link href="/" className="flex gap-2 flex-center">
         <Image
           className="object-contain"
@@ -48,8 +47,6 @@ const Nav = () => {
         />
         <p className="logo_text">Promptopia</p>
       </Link>
-
-      {/* Normal nav */}
 
       <div className="sm:flex hidden">
         {session?.user ? (
@@ -92,7 +89,6 @@ const Nav = () => {
         )}
       </div>
 
-      {/* mobile nav */}
       <div className="sm:hidden flex relative">
         {session?.user ? (
           <div className="flex">
