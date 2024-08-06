@@ -14,7 +14,6 @@ model User {
   image      String
   password   String?
 
-  // Opposite relation field to the creator in Prompt
   prompts    Prompt[]  @relation("UserPrompts")  
 
   @@map("users")
@@ -24,9 +23,8 @@ model Prompt {
   id        Int     @id @default(autoincrement())
   prompt    String
   tag       String
-  creatorId Int     // Foreign key field
+  creatorId Int     
 
-  // Relation field referencing User model
   creator   User    @relation(fields: [creatorId], references: [id], name: "UserPrompts")
 
   @@map("prompts")
