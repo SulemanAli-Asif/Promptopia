@@ -11,7 +11,6 @@ export const GET = async (req: Request) => {
         creator: true,
       },
     });
-    console.log("prompts: ", prompts);
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (err) {
     return new Response("Failed to fetch response", { status: 500 });
