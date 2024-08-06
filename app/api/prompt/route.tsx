@@ -1,6 +1,4 @@
-import Prompt from "@models/prompt";
 import { PrismaClient } from "@prisma/client";
-import { NextApiRequest } from "next";
 
 export const GET = async (req: Request) => {
   try {
