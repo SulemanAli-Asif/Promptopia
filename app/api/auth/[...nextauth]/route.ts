@@ -1,6 +1,8 @@
-import NextAuth, { Session, Profile } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -10,42 +12,113 @@ const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-  ],
-
-  callbacks: {
-    async session({ session }: { session: Session }) {
-      if (session?.user?.email) {
-        const sessionUser = await prisma.user.findUnique({
-          where: { email: session.user.email },
-        });
-        if (sessionUser) {
-          session.user.id = sessionUser.id.toString();
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password are required");
         }
-      }
-      return session;
-    },
-    async signIn({ profile }: any) {
-      try {
+
         const user = await prisma.user.findUnique({
-          where: { email: profile.email },
+          where: { email: credentials.email },
         });
 
-        if (!user && profile) {
-          await prisma.user.create({
+        if (
+          user &&
+          (await bcrypt.compare(credentials.password, user.password))
+        ) {
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+          };
+        }
+
+        throw new Error("Invalid email or password");
+      },
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user, account, profile }: any) {
+      if (account?.provider === "google") {
+        let dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+        });
+
+        if (!dbUser) {
+          dbUser = await prisma.user.create({
             data: {
-              email: profile.email!,
-              name: profile.name?.replace(" ", "").toLowerCase(),
-              image:
-                profile.picture ||
-                profile.image ||
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-              password: null,
+              email: profile.email,
+              name: profile.name,
+              image: profile.picture,
             },
           });
         }
 
-        return true;
-      } catch (err: any) {
+        token.id = dbUser.id;
+      } else if (user) {
+        token.id = user.id;
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        session.user.image = token.picture as string;
+      }
+      return session;
+    },
+    async signIn({ profile, credentials }: any): Promise<boolean> {
+      try {
+        let user;
+        if (profile) {
+          user = await prisma.user.findUnique({
+            where: { email: profile.email },
+          });
+
+          if (!user) {
+            user = await prisma.user.create({
+              data: {
+                email: profile.email!,
+                name: profile.name?.replace(" ", "").toLowerCase(),
+                image:
+                  profile.picture ||
+                  profile.image ||
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              },
+            });
+          }
+        } else if (credentials) {
+          user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
+
+          if (
+            user &&
+            (await bcrypt.compare(credentials.password, user.password))
+          ) {
+            return true;
+          }
+          return false;
+        }
+
+        if (user) {
+          return true;
+        }
+
+        return false;
+      } catch (err) {
         console.error("Error during sign-in:", err);
         return false;
       }

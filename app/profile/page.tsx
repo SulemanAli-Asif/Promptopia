@@ -12,14 +12,13 @@ const MyProfile = () => {
   const [posts, setPosts] = useState([]);
 
   const handleEdit = (post: any) => {
-    router.push(`update-prompt?id=${post._id}`);
+    router.push(`update-prompt?id=${post.id}`);
   };
-
   const handleDelete = async (post: any) => {
     const hasConfirmed = confirm("Are you sure you want to delete this post?");
     if (hasConfirmed) {
       try {
-        await fetch(`/api/prompt/${post._id.toString()}`, {
+        await fetch(`/api/prompt/${post.id.toString()}`, {
           method: "DELETE",
         });
         const newPosts = posts.filter((p: any) => p._id !== post._id);
@@ -36,7 +35,7 @@ const MyProfile = () => {
         setDesc(`Welcome to your profile, ${session?.user.name}!`);
       }
     });
-  }, []);
+  }, [posts, session?.user.name]);
 
   useEffect(() => {
     const fetchPosts = async () => {

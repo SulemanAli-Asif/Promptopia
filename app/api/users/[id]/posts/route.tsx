@@ -1,5 +1,3 @@
-import Prompt from "@models/prompt";
-import { NextApiRequest } from "next";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

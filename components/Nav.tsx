@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   signIn,
@@ -12,8 +13,8 @@ import {
   ClientSafeProvider,
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
-
 const Nav = () => {
+  const router = useRouter();
   const handleSignOut = async () => {
     await signOut();
   };
@@ -74,20 +75,18 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn "
-                >
-                  Sign in
-                </button>
-              ))}
+            <button
+              type="button"
+              className="black_btn "
+              onClick={() => router.push("/signin")}
+            >
+              Sign in
+            </button>
           </>
         )}
       </div>
+
+      {/* for responsive user */}
 
       <div className="sm:hidden flex relative">
         {session?.user ? (
@@ -135,17 +134,13 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
-                >
-                  Sign in
-                </button>
-              ))}
+            <button
+              type="button"
+              onClick={() => router.push("/signin")}
+              className="black_btn"
+            >
+              Sign in
+            </button>
           </>
         )}
       </div>
