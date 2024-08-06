@@ -14,7 +14,7 @@ const PromptCardList = ({
     <div className="mt-16 prompt_layout">
       {data.map((post: any) => (
         <PromptCard
-          key={post._id}
+          key={post.id}
           post={post}
           handleTagClick={handleTagClick}
           handleDelete={handleDelete}
@@ -47,7 +47,7 @@ const Feed = () => {
   };
 
   const handleEdit = (post: any) => {
-    router.push(`update-prompt?id=${post._id}`);
+    router.push(`update-prompt?id=${post.id}`);
   };
 
   useEffect(() => {

@@ -1,15 +1,18 @@
 import Prompt from "@models/prompt";
-import { connectDB } from "@utils/database";
+import { PrismaClient } from "@prisma/client";
 import { NextApiRequest } from "next";
+
+const prisma = new PrismaClient();
 
 export const GET = async (
   req: Request,
   { params }: { params: { id: string } }
 ) => {
   try {
-    await connectDB();
-
-    const prompt = await Prompt.findById(params.id).populate("creator");
+    const prompt = await prisma.prompt.findUnique({
+      where: { id: parseInt(params.id) },
+      include: { creator: true },
+    });
 
     if (!prompt) {
       return new Response("Prompt not found", { status: 404 });
@@ -27,18 +30,19 @@ export const PATCH = async (
   const { prompt, tag } = await req.json();
 
   try {
-    await connectDB();
-
-    const existingPrompt = await Prompt.findById(params.id);
+    const existingPrompt = await prisma.prompt.findUnique({
+      where: { id: parseInt(params.id) },
+    });
     if (!existingPrompt) {
       new Response("Prompt not found", { status: 404 });
     }
-    existingPrompt.prompt = prompt;
-    existingPrompt.tag = tag;
 
-    await existingPrompt.save();
+    const updatedPrompt = await prisma.prompt.update({
+      where: { id: parseInt(params.id) },
+      data: { prompt, tag },
+    });
 
-    return new Response(JSON.stringify(existingPrompt), { status: 200 });
+    return new Response(JSON.stringify(updatedPrompt), { status: 200 });
   } catch (err) {
     return new Response("Failed to fetch response", { status: 500 });
   }
@@ -49,8 +53,9 @@ export const DELETE = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    await connectDB();
-    await Prompt.findByIdAndDelete(params.id);
+    await prisma.prompt.delete({
+      where: { id: parseInt(params.id) },
+    });
 
     return new Response("Prompt deleted", { status: 200 });
   } catch (err) {

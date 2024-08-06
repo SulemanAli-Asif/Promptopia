@@ -12,9 +12,8 @@ const PromptCard = ({
   handleDelete,
 }: any) => {
   const { data: session } = useSession();
-
-
   const [copy, setcopy] = useState("");
+  const sessionId: number = parseInt(session?.user.id ?? "");
 
   const handleCopy = () => {
     setcopy(post.prompt);
@@ -24,6 +23,7 @@ const PromptCard = ({
       setcopy("");
     }, 3000);
   };
+
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
@@ -37,15 +37,15 @@ const PromptCard = ({
               className="rounded-full object-contain"
             />
           )}
-        <Link href = {`/user-profile?id=${post?.creator?._id}`}>
-        <div className="flex flex-col">
-            <h3 className="font-satoshi font-semibold text-gray-900">
-              {post?.creator?.name && post.creator.name}
-            </h3>
-            <p className="font-inter text-sm text-gray-500">
-              {post?.creator?.email && post.creator.email}
-            </p>
-          </div>
+          <Link href={`/user-profile?id=${post?.creator?.id}`}>
+            <div className="flex flex-col">
+              <h3 className="font-satoshi font-semibold text-gray-900">
+                {post?.creator?.name && post.creator.name}
+              </h3>
+              <p className="font-inter text-sm text-gray-500">
+                {post?.creator?.email && post.creator.email}
+              </p>
+            </div>
           </Link>
         </div>
         <div className="copy_btn" onClick={handleCopy}>
@@ -69,26 +69,24 @@ const PromptCard = ({
       >
         {post.tag}
       </p>
-      {session?.user.id === post?.creator?._id && (
+      {sessionId === post?.creatorId && (
         <div className=" mt-4 flex-center gap-4 border-t border-gray-100 pt-3 items-center ">
           <button
             className="btn font-inter text-sm  text-white green_gradient cursor-pointer"
-            onClick={()=>handleEdit(post)}
+            onClick={() => handleEdit(post)}
           >
             Edit
           </button>
 
           <button
             className="btn font-inter text-sm  text-white orange_gradient cursor-pointer"
-            onClick={()=>handleDelete(post)}
+            onClick={() => handleDelete(post)}
           >
             Delete
           </button>
-          
         </div>
       )}
     </div>
-
   );
 };
 

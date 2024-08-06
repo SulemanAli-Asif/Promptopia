@@ -1,17 +1,22 @@
 import Prompt from "@models/prompt";
-import { connectDB } from "@utils/database";
 import { NextApiRequest } from "next";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const GET = async (
   req: Request,
   { params }: { params: { id: string } }
 ) => {
   try {
-    await connectDB();
-
-    const prompts = await Prompt.find({ creator: params.id }).populate(
-      "creator"
-    );
+    const prompts = await prisma.prompt.findMany({
+      where: {
+        creatorId: parseInt(params.id, 10),
+      },
+      include: {
+        creator: true,
+      },
+    });
 
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (err) {

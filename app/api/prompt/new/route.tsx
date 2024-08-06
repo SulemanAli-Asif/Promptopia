@@ -1,25 +1,28 @@
-import { connectDB } from "@utils/database";
-import { NextApiRequest, NextApiResponse } from "next";
-import Prompt from "@models/prompt";
+// api/prompt/route.ts
+import { PrismaClient } from "@prisma/client";
 
-export const POST = async (req:any,res:any) =>{
+const prisma = new PrismaClient();
 
-    const {userId, prompt, tag} = await req.json();
+export const POST = async (req: Request) => {
+  try {
+    const { userId, prompt, tag } = await req.json();
 
-    try{
-        await connectDB();
+    const newPrompt = await prisma.prompt.create({
+      data: {
+        creatorId: parseInt(userId, 10),
+        prompt,
+        tag,
+      },
+    });
 
-        const newPrompt  = new Prompt ({
-            creator: userId,
-            prompt,
-            tag
-        })
-        await newPrompt.save();
-
-        return new Response(JSON.stringify(newPrompt), {status: 201})
-    }
-    catch(err)
-    {
-       return new Response (JSON.stringify(err), {status: 500})
-    }
-}
+    return new Response(JSON.stringify(newPrompt), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+};
