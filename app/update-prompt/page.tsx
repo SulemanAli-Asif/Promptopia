@@ -62,7 +62,6 @@ const EditPage = () => {
       setPost={setPost}
       submit={submit}
       handleSubmit={createPost}
-      // handleDelete = {handleDelete}
     />
   );
 };

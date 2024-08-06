@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import Profile from "@components/Profile";
 
@@ -27,7 +27,7 @@ const MyProfile = () => {
         setName(firstPost?.creator?.name || "");
       }
     }
-  }, [posts, session?.user.id, id]);
+  }, [id, posts, session?.user.id, session?.user.name]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -37,7 +37,7 @@ const MyProfile = () => {
     };
 
     fetchPosts();
-  }, [session?.user.id]);
+  }, [id, session?.user.id]);
   return <Profile name={name} desc={desc} data={posts} />;
 };
 
